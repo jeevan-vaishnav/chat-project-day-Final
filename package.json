@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "apollo-server": "^3.4.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^15.7.2",
+    "mysql2": "^2.3.2",
+    "sequelize": "^6.8.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "name": "chat",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
