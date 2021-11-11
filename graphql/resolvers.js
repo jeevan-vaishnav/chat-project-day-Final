@@ -101,10 +101,10 @@ module.exports = {
           errors.confirmPassword = "passwords must match";
 
         //TODO check if username / email exits
-        // const userByUsername = await User.findOne({ where: { username } });
-        // const userByEmail = await User.findOne({ where: { email } });
-        // if (userByUsername) errors.username = "Username is taken";
-        // if (userByEmail) errors.email = "Email is taken";
+        const userByUsername = await User.findOne({ where: { username } });
+        const userByEmail = await User.findOne({ where: { email } });
+        if (userByUsername) errors.username = "Username is taken";
+        if (userByEmail) errors.email = "Email is taken";
 
         if (Object.keys(errors).length > 0) {
           throw errors;

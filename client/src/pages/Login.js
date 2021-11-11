@@ -1,49 +1,36 @@
 import React, { useState } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 
-export default function Register(props) {
+export default function Login(props) {
   const [variables, setVariables] = useState({
-    email: "",
     username: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const [registerUser, { loading }] = useMutation(REGISTER_USER, {
-    update: (_, __) => props.history.push("/login"),
+  const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
     onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
+    onCompleted(data) {
+      localStorage.setItem("token", data.login.token);
+      props.history.push("/");
+    },
   });
 
-  const submitRegisterForm = (e) => {
+  const submitLoginForm = (e) => {
     e.preventDefault(); //by default the referece the page
-    registerUser({ variables });
+    loginUser({ variables });
   };
 
   return (
     <>
       <Row className="bg-white py-5 justify-content-center">
         <Col sm={8} md={6} lg={4}>
-          <h1 className="text-center">Register</h1>
+          <h1 className="text-center">Login</h1>
 
-          <Form onSubmit={submitRegisterForm}>
-            {/* Form Group1 */}
-            <Form.Group>
-              <Form.Label className={errors.email && "text-danger"}>
-                {errors.email ?? " Email address"}
-              </Form.Label>
-              <Form.Control
-                type="email"
-                value={variables.email}
-                className={errors.email && "is-invalid"}
-                onChange={(e) =>
-                  setVariables({ ...variables, email: e.target.value })
-                }
-              />
-            </Form.Group>
+          <Form onSubmit={submitLoginForm}>
             {/* Form Group2 */}
             <Form.Group>
               <Form.Label className={errors.username && "text-danger"}>
@@ -74,31 +61,13 @@ export default function Register(props) {
             </Form.Group>
             {/* Form Group4 */}
 
-            <Form.Group>
-              <Form.Label className={errors.confirmPassword && "text-danger"}>
-                {errors.confirmPassword ?? "Confirm password"}
-              </Form.Label>
-              <Form.Control
-                type="password"
-                value={variables.confirmPassword}
-                className={errors.confirmPassword && "is-invalid"}
-                onChange={(e) =>
-                  setVariables({
-                    ...variables,
-                    confirmPassword: e.target.value,
-                  })
-                }
-              />
-            </Form.Group>
-
             <div className="text-center mt-2">
               <Button variant="success" type="submit" disabled={loading}>
-                {loading ? "Loading..." : "Register"}
+                {loading ? "Loading..." : "Login"}
               </Button>
-
               <br />
               <small>
-                Already have an account? <Link to="/login">Login</Link>
+                Don't have an account? <Link to="/register">Register</Link>
               </small>
             </div>
           </Form>
@@ -108,22 +77,17 @@ export default function Register(props) {
   );
 }
 
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
+const LOGIN_USER = gql`
+  query login($username: String!, $password: String!) {
+    login(
       username: $username
-      email: $email
+
       password: $password
-      confirmPassword: $confirmPassword
     ) {
       email
       username
       createdAt
+      token
     }
   }
 `;
