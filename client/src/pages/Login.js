@@ -62,7 +62,6 @@ export default function Login(props) {
                 }
               />
             </Form.Group>
-            {/* Form Group4 */}
 
             <div className="text-center mt-2">
               <Button variant="success" type="submit" disabled={loading}>
@@ -82,15 +81,11 @@ export default function Login(props) {
 
 const LOGIN_USER = gql`
   query login($username: String!, $password: String!) {
-    login(
-      username: $username
-
-      password: $password
-    ) {
+    login(username: $username, password: $password) {
       email
       username
-      createdAt
       token
+      createdAt
     }
   }
 `;
