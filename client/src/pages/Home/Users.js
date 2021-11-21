@@ -3,6 +3,7 @@ import { Col, Row, Button, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useMessagesDispatch, useMessagesState } from "../../context/message";
 import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import classNames from "classnames";
 
 const GET_USERS = gql`
   query getUsers {
@@ -22,7 +23,7 @@ const GET_USERS = gql`
   }
 `;
 
-export default function Users({ setSelectedUser }) {
+export default function Users({ setSelectedUser, selectedUser }) {
   const dispatch = useMessagesDispatch();
   const { users } = useMessagesState();
   const { loading } = useQuery(GET_USERS, {
@@ -37,28 +38,35 @@ export default function Users({ setSelectedUser }) {
   } else if (users.length === 0) {
     usersMarkup = <p>No users have joined yet</p>;
   } else if (users.length > 0) {
-    usersMarkup = users.map((user) => (
-      <div
-        className="d-flex p-3"
-        key={user.username}
-        onClick={() => setSelectedUser(user.username)}
-      >
-        <Image
-          src={user.imageUrl}
-          roundedCircle
-          className="mr-2"
-          style={{ width: 50, height: 50, objectFit: "cover" }}
-        />
-        <div>
-          <p className="text-success mx-2"> {user.username}</p>
-          <p className="font-weight-light mx-2">
-            {user.latestMessages
-              ? user.latestMessages.content
-              : "You are not connected"}
-          </p>
+    usersMarkup = users.map((user) => {
+      const selected = selectedUser === user.username;
+
+      return (
+        <div
+          role="button"
+          className={classNames("user-div d-flex p-3", {
+            "bg-white": selected,
+          })}
+          key={user.username}
+          onClick={() => setSelectedUser(user.username)}
+        >
+          <Image
+            src={user.imageUrl}
+            roundedCircle
+            className="mr-2"
+            style={{ width: 50, height: 50, objectFit: "cover" }}
+          />
+          <div>
+            <p className="text-success mx-2"> {user.username}</p>
+            <p className="font-weight-light mx-2">
+              {user.latestMessages
+                ? user.latestMessages.content
+                : "You are not connected"}
+            </p>
+          </div>
         </div>
-      </div>
-    ));
+      );
+    });
   }
   return (
     <Col xs={4} className="px-0 bg-secondary">
