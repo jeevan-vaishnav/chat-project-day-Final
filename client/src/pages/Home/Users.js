@@ -73,7 +73,7 @@ export default function Users() {
     });
   }
   return (
-    <Col xs={4} className="px-0 bg-secondary">
+    <Col xs={4} className="p-0 bg-secondary">
       {usersMarkup}
     </Col>
   );
