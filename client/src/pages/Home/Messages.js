@@ -63,7 +63,7 @@ export default function Messages() {
     selectedChatMarkup = <p>You are now connected! send your first message!</p>;
   }
   return (
-    <Col xs={8} className="message-box d-flex flex-column-reverse">
+    <Col xs={10} md={8} className="message-box d-flex flex-column-reverse">
       {selectedChatMarkup}
     </Col>
   );
