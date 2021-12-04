@@ -73,8 +73,8 @@ export default function Messages() {
 
   const submitMessage = (e) => {
     e.preventDefault(); //page reload
-    if (content === "") return;
-
+    if (content === "" || !selectedUser) return;
+    setContent("");
     //mutation for sending the message
 
     sendMessage({ variables: { to: selectedUser.username, content } });
@@ -107,14 +107,19 @@ export default function Messages() {
       </div>
       <div>
         <Form onSubmit={submitMessage}>
-          <Form.Group>
+          <Form.Group className="d-flex align-items-center">
             <Form.Control
-              text="text"
-              className="rounded-pill bg-secondary"
-              placeholder="type a message.."
+              type="text"
+              className="rounded-pill bg-secondary my-2"
               value={content}
+              placeholder="Please enter message.."
               onChange={(e) => setContent(e.target.value)}
             />
+            <i
+              className="fas fa-paper-plane fa-2x text-primary mx-2"
+              role="button"
+              onClick={submitMessage}
+            ></i>
           </Form.Group>
         </Form>
       </div>
